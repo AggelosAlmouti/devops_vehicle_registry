@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Signup</title>
+{% endblock %}
+
+{% block body %}
+
+<section>
+    <h2>Sign Up</h2>
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
+    <form method='POST' action="">
+        {{ form.hidden_tag() }}
+        {{ form.email }}
+        {{ form.password }}
+        {{ form.password2 }}
+        {{ form.submit }}
+    </form>
+    <a href="{{url_for('login')}}">Already have an account? Login</a>
+</section>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Vehicle Registry</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar">
+    <ul>
+        <li class="first"><a href="#section1"><strong>My Registry</strong></a></li>
+        <li><a href="#section2"><strong>New Import</strong></a></li>
+        <div class="login-info">
+            <li><a href="{{url_for('logout')}}"><strong>Logout</strong></a></li>
+            <li>{{ session.email }}</li>
+        </div>
+    </ul>
+</nav>
+
+<section id="section1">
+    <h1>My Registry</h1>
+    {% if vehicles|length < 1 %}
+    <h5>You have no registered vehicles</h5>
+    {% else %}
+    <div class="search_form">
+        <table>
+            <tr>
+                <th>License Plate</th>
+                <th>Type</th>
+                <th>Manufacturer</th>
+                <th>Model Name</th>
+                <th>Color</th>
+                <th>Owner</th>
+            </tr>
+            {% for vehicle in vehicles %}
+                <tr>
+                    <td>{{ vehicle.license_plate }}</td>
+                    <td>{{ vehicle.vehicle_type }}</td>
+                    <td>{{ vehicle.manufacturer }}</td>
+                    <td>{{ vehicle.model_name }}</td>
+                    <td>{{ vehicle.color }}</td>
+                    <td>{{ vehicle.owner }}</td>
+                    <td>
+                        <a href="/delete/{{ vehicle.license_plate}}">Delete</a>
+                        <br>
+                        <a href="/update/{{ vehicle.license_plate}}">Update</a>
+                    </td>
+                </tr>
+            {% endfor%}
+        </table>
+    </div>
+    {% endif %}
+    <form method="POST">
+        <button name="email_button" value="email">Email me my registry</button>
+    </form>
+    {% if sent %}
+        <div class="success">{{ sent }}</div>
+    {% endif %}
+</section>
+
+<section id="section2">
+    <h2>New Import</h2>
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
+    <form action="/" method="POST" name="import_form" value="add">
+        <div class="input">
+            <label for="license_plate">License Plate: </label>
+            <input type="text" name="license_plate" required>
+        </div>
+        <div class="input">
+            <label for="vehicle_type">Type: </label>
+            <input type="text" name="vehicle_type" required>
+        </div>
+        <div class="input">
+            <label for="manufacturer">Manufacturer: </label>
+            <input type="text" name="manufacturer" required>
+        </div>
+        <div class="input">
+            <label for="Model Name: ">Model Name: </label>
+            <input type="text" name="model_name" required>
+        </div>
+        <div class="input">
+            <label for="Color: ">Color: </label>
+            <input type="text" name="color" required>
+        </div>
+        <div class="input"> 
+            <label for="Owner: ">Owner: </label>
+            <input type="text" name="owner" required>
+        </div>
+
+        <br><input type="submit" value="Add Vehicle">
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Update Vehicle</title>
+{% endblock %}
+
+{% block body %}
+<section>
+    <h2>Update Vehicle</h2>
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
+    <form class="import_form" action="/update/{{vehicle_to_update.license_plate}}" method="POST">
+        Type: <input type="text" name="vehicle_type" value="{{vehicle_to_update.vehicle_type}}" required>
+        Manufacturer: <input type="text" name="manufacturer" value="{{vehicle_to_update.manufacturer}}" required>
+        Model Name: <input type="text" name="model_name" value="{{vehicle_to_update.model_name}}" required>
+        Color: <input type="text" name="color" value="{{vehicle_to_update.color}}" required>
+        Owner: <input type="text" name="owner" value="{{vehicle_to_update.owner}}" required>
+
+        <br><input type="submit" value="Update">
+    </form>
+</section>
+{% endblock %}
