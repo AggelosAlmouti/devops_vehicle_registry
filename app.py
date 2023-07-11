@@ -18,8 +18,8 @@ bcrypt = Bcrypt(app)
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = '465'
-app.config['MAIL_USERNAME'] = 'it@hua.gr'
-app.config['MAIL_PASSWORD'] = 'pass'
+app.config['MAIL_USERNAME'] = 'it21903@hua.gr'
+app.config['MAIL_PASSWORD'] = 'X6T(qcd^8'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -117,22 +117,12 @@ def logout():
 def index():
     message = None
     user = User.query.filter_by(email=session['email']).first()
-    vehicles = vehicle.query.filter_by(id=user.id).all()
+    if session['email'] == 'admin@registry.com':
+        vehicles = vehicle.query.all()
+    else:
+        vehicles = vehicle.query.filter_by(id=user.id).all()
     
     if request.method == 'POST':
-
-        # if request.form['email_button'] == 'email':
-        #     msg = Message("My vehicle registry", sender='vreg-noreply@gmail.com', recipients=["aggelos.almouti@gmail.com"])
-        #     text = ''
-        #     for x in vehicles:
-        #         text += 'License Plate: ' + x.license_plate +", " +'Type: ' + x.vehicle_type +", " +'Manufacturer: ' + x.manufacturer +", " +'Model Name: ' + x.model_name +", " +'Color: ' + x.color +", " +'Owner: ' + x.owner + "\n"
-                
-        #     msg.body = str(text)
-        #     mail.send(msg)
-        #     sent = 'Email sent'
-        #     return render_template('index.html', vehicles=vehicles, sent=sent)
-            
-        # elif request.form['import_form'] == 'add':
 
         new_vehicle = vehicle(
             id = user.id,
@@ -154,10 +144,38 @@ def index():
             return redirect('/')
         except:
             return 'Error adding vehicle'
+            
+        return render_template('index.html', vehicles=vehicles)
 
     else:
         return render_template('index.html', vehicles=vehicles)
         
+@app.route('/email', methods=['POST'])
+@login_required
+def email():
+    sent = None
+    user = User.query.filter_by(email=session['email']).first()
+    if session['email'] == 'admin@registry.com':
+        vehicles = vehicle.query.all()
+    else:
+        vehicles = vehicle.query.filter_by(id=user.id).all()
+    
+
+    if len(vehicles) == 0:
+        sent = 'You have no registered vehicles'
+        return render_template('index.html', vehicles=vehicles, sent=sent)
+
+    user_email = session['email']
+    msg = Message("My vehicle registry", sender='vreg-noreply@gmail.com', recipients=[user_email])
+    text = ''
+    for x in vehicles:
+        text += 'License Plate: ' + x.license_plate +", " +'Type: ' + x.vehicle_type +", " +'Manufacturer: ' + x.manufacturer +", " +'Model Name: ' + x.model_name +", " +'Color: ' + x.color +", " +'Owner: ' + x.owner + "\n"
+        
+    msg.body = str(text)
+    mail.send(msg)
+    sent = 'Email sent'
+    return render_template('index.html', vehicles=vehicles, sent=sent)
+
 
 @app.route('/delete/<string:license_plate>')
 @login_required

@@ -49,8 +49,8 @@
         </table>
     </div>
     {% endif %}
-    <form method="POST">
-        <button name="email_button" value="email">Email me my registry</button>
+    <form action="/email" method="POST">
+        <button>Email me my registry</button>
     </form>
     {% if sent %}
         <div class="success">{{ sent }}</div>
@@ -62,7 +62,7 @@
     {% if message %}
         <div class="error">{{ message }}</div>
     {% endif %}
-    <form action="/" method="POST" name="import_form" value="add">
+    <form action="/" method="POST">
         <div class="input">
             <label for="license_plate">License Plate: </label>
             <input type="text" name="license_plate" required>
@@ -88,7 +88,7 @@
             <input type="text" name="owner" required>
         </div>
 
-        <br><input type="submit" value="Add Vehicle">
+        <br><button>Add Vehicle</button>
     </form>
 </section>
 {% endblock %}
